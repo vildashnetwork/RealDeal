@@ -13,8 +13,7 @@
       "destination": "/index.html",
       "statusCode": 200
     }
-  ]
-},
+  ],
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",
