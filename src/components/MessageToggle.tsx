@@ -8,24 +8,40 @@ import { toast } from 'sonner';
 
 const MessageToggle = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    if (!name || !email || !message) {
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    // Validate required fields
+    if (!formData.get('name') || !formData.get('email') || !formData.get('message')) {
       toast.error('Please fill in all fields');
       return;
     }
 
-    // Simulate sending message
-    toast.success('Message sent! We\'ll get back to you soon.');
-    setName('');
-    setEmail('');
-    setMessage('');
-    setIsOpen(false);
+    setSending(true);
+
+    try {
+      const response = await fetch('https://formsubmit.co/liblissz3@gmail.com', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        toast.success("Message sent successfully! We'll get back to you soon.");
+        form.reset();
+        setIsOpen(false);
+      } else {
+        toast.error('Failed to send message. Try again later.');
+      }
+    } catch (error) {
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -57,29 +73,24 @@ const MessageToggle = () => {
             </CardHeader>
             <CardContent className="p-4">
               <form onSubmit={handleSubmit} className="space-y-3">
-                <Input
-                  placeholder="Your name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="h-9"
-                />
-                <Input
-                  type="email"
-                  placeholder="Your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-9"
-                />
+                <input type="hidden" name="_captcha" value="false" />
+                <input type="hidden" name="_template" value="table" />
+                <input type="hidden" name="_subject" value="New message from your website" />
+                <Input name="name" placeholder="Your name" className="h-9" />
+                <Input name="email" type="email" placeholder="Your email" className="h-9" />
                 <Textarea
+                  name="message"
                   placeholder="Your message"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
                   rows={4}
                   className="resize-none"
                 />
-                <Button type="submit" className="w-full bg-cta hover:bg-cta/90 text-cta-foreground">
+                <Button
+                  type="submit"
+                  disabled={sending}
+                  className="w-full bg-cta hover:bg-cta/90 text-cta-foreground"
+                >
                   <Send className="h-4 w-4 mr-2" />
-                  Send Message
+                  {sending ? 'Sending...' : 'Send Message'}
                 </Button>
               </form>
             </CardContent>
