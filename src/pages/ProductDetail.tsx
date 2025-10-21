@@ -586,7 +586,6 @@ const ProductDetail = () => {
     if (id) fetchProduct();
   }, [id]);
 
-  // 🛒 Add to Cart
   const handleAddToCart = async () => {
     if (!token) {
       alert("Please log in before adding items to your cart.");
@@ -595,18 +594,21 @@ const ProductDetail = () => {
 
     try {
       setAdding(true);
+
       const payload = {
-        ProductName: product.ProductName,
-        SKU: product._id,
-        Description: product.Description,
-        Specifications: "N/A",
-        Price: Number(product.Price),
-        CompareatPrice: Number(product.CompareatPrice || 0),
-        Weight: "N/A",
-        Category: product.Category,
-        StockQuantity: quantity,
-        img3: product.img3,
+        ProductName: product?.ProductName || "Untitled Product",
+        SKU: product?._id || "N/A",
+        Description: product?.Description || "No description available",
+        Specifications: product?.Specifications || "N/A",
+        Price: Number(product?.Price) || 1,
+        CompareatPrice: Number(product?.CompareatPrice) || Number(product?.Price) || 1,
+        Weight: product?.Weight || "N/A",
+        Category: product?.Category || "General",
+        StockQuantity: quantity || 1,
+        img3: product?.img3 || product?.image || "https://via.placeholder.com/300",
       };
+
+      console.log("Payload being sent:", payload); // debug log
 
       const res = await axios.post(
         "https://realdealbackend.onrender.com/addtocart",
@@ -616,12 +618,12 @@ const ProductDetail = () => {
         }
       );
 
-      console.log("Added to cart:", res.data);
-      alert("✅ Product added to your cart!");
-      window.location.reload();
+      console.log("✅ Added to cart:", res.data);
+      alert("✅ Product added to your cart successfully!");
+      window.location.href = "/cart"
     } catch (err: any) {
-      console.error("Error adding to cart:", err);
-      alert(err.response?.data?.message || "❌ Failed to add product.");
+      console.error("❌ Add to cart error:", err.response?.data || err);
+      alert(err.response?.data?.message || "Failed to add product to cart.");
     } finally {
       setAdding(false);
     }

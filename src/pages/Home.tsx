@@ -109,7 +109,9 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {['Rods & Reels', 'Lures & Baits', 'Tackle & Gear', 'Apparel'].map((category) => (
+
+
+            {["all", "Rods", "Reels", "Hooks", "Lures", "Lines", "Accessories"].map((category) => (
               <Link
                 key={category}
                 to={`/products?category=${encodeURIComponent(category)}`}

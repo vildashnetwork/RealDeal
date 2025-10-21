@@ -101,7 +101,7 @@ const Products = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const categories = ["all", "Rods & Reels", "Lures & Baits", "Tackle & Gear", "Apparel"];
+  const categories = ["all", "Rods", "Reels", "Hooks", "Lures", "Lines", "Accessories"];
 
   const fetchProducts = async () => {
     try {
