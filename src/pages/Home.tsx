@@ -6,6 +6,7 @@ import { getProducts } from '@/lib/localStorage';
 import heroImage from '@/assets/hero-fishing.jpg';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import FakeReviewComponent from './Review';
 
 const Home = () => {
   // const featuredProducts = getProducts().slice(0, 4);
@@ -13,6 +14,7 @@ const Home = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [products, setProducts] = useState<any[]>([]);
+
   const featuredProducts = async () => {
     try {
       setLoading(true);
@@ -134,11 +136,16 @@ const Home = () => {
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <center className="col-span-full">
+              {loading && <p className="text-muted-foreground">Loading Products...</p>}
+            </center>
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         </div>
+
+        <FakeReviewComponent />
       </section>
     </div>
   );
